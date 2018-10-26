@@ -6,8 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +75,9 @@ public class VehicleService {
   }
 
   public void cancel() {
-    driveTask.cancel(true);
+    if (driveTask!= null) {
+      driveTask.cancel(true);
+    }
     VehicleState state = getOrInit();
     state.setVelocityInKmph(0);
     save(state);
@@ -101,10 +105,17 @@ public class VehicleService {
   }
 
   public void update(String key, String value) {
-    if ("map".equals(key)) {
+    if ("gpsRoute".equals(key)) {
       VehicleState state = getOrInit();
       state.setGpsRoute(value);
       save(state);
     }
+  }
+
+  @EventListener(ApplicationReadyEvent.class)
+  public void stopCar() {
+    VehicleState state = getOrInit();
+    state.setVelocityInKmph(0);
+    save(state);
   }
 }

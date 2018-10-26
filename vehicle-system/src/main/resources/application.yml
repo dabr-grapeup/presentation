@@ -4,10 +4,8 @@ spring:
       bindings:
         input:
           destination: queue.updates
-          binder: vehicle
         output:
           destination: queue.changes
-          binder: vehicle
       binders:
         local_rabbit:
           type: rabbit
@@ -19,3 +17,5 @@ spring:
                 username: guest
                 password: guest
                 virtual-host: /
+server:
+  port: 7777

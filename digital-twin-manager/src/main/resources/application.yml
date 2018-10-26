@@ -1,0 +1,23 @@
+server:
+  port: 9999
+spring:
+  application:
+    name: digital-twin-manager
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: queue.updates
+        input:
+          destination: queue.changes
+      binders:
+        local_rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: guest
+                password: guest
+                virtual-host: /

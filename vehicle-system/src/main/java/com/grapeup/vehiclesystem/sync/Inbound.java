@@ -1,6 +1,9 @@
 package com.grapeup.vehiclesystem.sync;
 
 import com.grapeup.vehiclesystem.domain.VehicleService;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -19,10 +22,9 @@ public class Inbound {
   }
 
   @StreamListener(target = Sink.INPUT)
-  public void receive(String payload) {
+  public void receive(Change payload) {
     log.info("Received message: {}", payload);
-    String[] split = payload.split(",");
-    vehicleService.update(split[0], split[1]);
+    vehicleService.update(payload.getKey(), payload.getValue());
   }
 
 }
