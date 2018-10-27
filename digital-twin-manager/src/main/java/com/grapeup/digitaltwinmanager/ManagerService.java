@@ -4,28 +4,23 @@ import com.grapeup.digitaltwinmanager.digitaltwin.DigitalTwin;
 import com.grapeup.digitaltwinmanager.digitaltwin.DigitalTwinRepository;
 import com.grapeup.digitaltwinmanager.gps.Destination;
 import com.grapeup.digitaltwinmanager.gps.GPS;
-import com.grapeup.digitaltwinmanager.vehicle.Update;
+import com.grapeup.digitaltwinmanager.vehicle.UpdatesHandler;
 import com.grapeup.digitaltwinmanager.vehicle.VehicleState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@EnableBinding(Source.class)
 public class ManagerService {
 
   private final DigitalTwinRepository digitalTwinRepository;
   private final GPS gps;
-  private final Source updatesChannel;
+  private final UpdatesHandler updatesHandler;
 
   @Autowired
-  public ManagerService(DigitalTwinRepository digitalTwinRepository, GPS gps, Source updatesChannel) {
+  public ManagerService(DigitalTwinRepository digitalTwinRepository, GPS gps, UpdatesHandler updatesHandler) {
     this.digitalTwinRepository = digitalTwinRepository;
     this.gps = gps;
-    this.updatesChannel = updatesChannel;
+    this.updatesHandler = updatesHandler;
   }
 
   public void updateDigitalTwin(VehicleState vehicleState) {
@@ -66,16 +61,6 @@ public class ManagerService {
     String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters().getActual() / 1000);
     digitalTwin.getGpsRoute().setDesired(gpsRoute);
     digitalTwinRepository.save(digitalTwin);
-    updatesChannel.output().send(new GenericMessage<>(new Update("gpsRoute", gpsRoute)));
-  }
-
-  @Scheduled(fixedRate = 1000)
-  private void updateVehicle() {
-    DigitalTwin digitalTwin = getDigitalTwin();
-    String gpsRoute = digitalTwin.getGpsRoute().getDesired();
-    if (gpsRoute != null
-        && !gpsRoute.equals(digitalTwin.getGpsRoute().getActual())) {
-      updatesChannel.output().send(new GenericMessage<>(new Update("gpsRoute", gpsRoute)));
-    }
+    updatesHandler.sendGPSRoute(gpsRoute);
   }
 }
