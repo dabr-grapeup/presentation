@@ -1,7 +1,6 @@
 package com.grapeup.digitaltwinmanager;
 
 import com.grapeup.digitaltwinmanager.digitaltwin.DigitalTwin;
-import com.grapeup.digitaltwinmanager.digitaltwin.DigitalTwinRepository;
 import com.grapeup.digitaltwinmanager.gps.Destination;
 import com.grapeup.digitaltwinmanager.gps.GPS;
 import com.grapeup.digitaltwinmanager.vehicle.UpdatesHandler;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ManagerService {
 
+/*
   private final DigitalTwinRepository digitalTwinRepository;
   private final GPS gps;
   private final UpdatesHandler updatesHandler;
@@ -52,15 +52,16 @@ public class ManagerService {
     }
   }
 
+*/
   public DigitalTwin getDigitalTwin() {
-    return digitalTwinRepository.findById("main").orElseGet(DigitalTwin::new);
+    // get digital twin from repository or create new one
+    return new DigitalTwin();
   }
 
   public void updateGPS(Destination destination) {
     DigitalTwin digitalTwin = getDigitalTwin();
-    String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters().getActual() / 1000);
-    digitalTwin.getGpsRoute().setDesired(gpsRoute);
-    digitalTwinRepository.save(digitalTwin);
-    updatesHandler.sendGPSRoute(gpsRoute);
+    // String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters().getActual() / 1000);
+    // set desired state and save in database
+    // updatesHandler.sendGPSRoute(gpsRoute);
   }
 }

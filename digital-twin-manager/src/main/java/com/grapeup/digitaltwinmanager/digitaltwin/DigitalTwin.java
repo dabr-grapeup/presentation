@@ -11,10 +11,10 @@ public class DigitalTwin {
   @Id
   private String id = "main";
 
-  private DigitalTwinProperty<Long> mileageInMeters = new DigitalTwinProperty<>();
+/*  private DigitalTwinProperty<Long> mileageInMeters = new DigitalTwinProperty<>();
 
   private DigitalTwinProperty<Long> rangeInMeters = new DigitalTwinProperty<>();
 
-  private DigitalTwinProperty<String> gpsRoute = new DigitalTwinProperty<>();
+  private DigitalTwinProperty<String> gpsRoute = new DigitalTwinProperty<>();*/
 
 }

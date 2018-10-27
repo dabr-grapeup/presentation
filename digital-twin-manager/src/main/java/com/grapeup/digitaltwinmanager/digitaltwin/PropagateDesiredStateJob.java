@@ -21,11 +21,11 @@ public class PropagateDesiredStateJob {
   @Scheduled(fixedRate = 1000)
   private void updateVehicle() {
     DigitalTwin digitalTwin = managerService.getDigitalTwin();
-    String gpsRoute = digitalTwin.getGpsRoute().getDesired();
+  /*  String gpsRoute = digitalTwin.getGpsRoute().getDesired();
     if (gpsRoute != null
         && !gpsRoute.equals(digitalTwin.getGpsRoute().getActual())) {
       updatesHandler.sendGPSRoute(gpsRoute);
-    }
+    }*/
   }
 
 }
