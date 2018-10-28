@@ -26,8 +26,8 @@ public class ManagerService {
   public void updateDigitalTwin(VehicleState vehicleState) {
     DigitalTwin digitalTwin = getDigitalTwin();
 
-    digitalTwin.getMileageInMeters().setActual(vehicleState.getMileageInMeters());
-    digitalTwin.getRangeInMeters().setActual(vehicleState.getRangeInMeters());
+    digitalTwin.setMileageInMeters(vehicleState.getMileageInMeters());
+    digitalTwin.setRangeInMeters(vehicleState.getRangeInMeters());
     digitalTwin.getGpsRoute().setActual(vehicleState.getGpsRoute());
 
     removeDesiredStateIfSet(digitalTwin);
@@ -36,19 +36,9 @@ public class ManagerService {
   }
 
   private void removeDesiredStateIfSet(DigitalTwin digitalTwin) {
-    if (digitalTwin.getMileageInMeters().getActual() != null
-        && digitalTwin.getMileageInMeters().getActual().equals(digitalTwin.getMileageInMeters().getDesired())) {
-      digitalTwin.getMileageInMeters().setDesired(null);
-    }
-
     if (digitalTwin.getGpsRoute().getActual() != null
         && digitalTwin.getGpsRoute().getActual().equals(digitalTwin.getGpsRoute().getDesired())) {
       digitalTwin.getGpsRoute().setDesired(null);
-    }
-
-    if (digitalTwin.getRangeInMeters().getActual() != null
-        && digitalTwin.getRangeInMeters().getActual().equals(digitalTwin.getRangeInMeters().getDesired())) {
-      digitalTwin.getRangeInMeters().setDesired(null);
     }
   }
 
@@ -58,7 +48,7 @@ public class ManagerService {
 
   public void updateGPS(Destination destination) {
     DigitalTwin digitalTwin = getDigitalTwin();
-    String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters().getActual() / 1000);
+    String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters() / 1000);
     digitalTwin.getGpsRoute().setDesired(gpsRoute);
     digitalTwinRepository.save(digitalTwin);
     updatesHandler.sendGPSRoute(gpsRoute);

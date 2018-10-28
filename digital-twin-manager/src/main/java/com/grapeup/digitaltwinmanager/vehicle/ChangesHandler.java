@@ -23,5 +23,4 @@ public class ChangesHandler {
     log.info("Received message: {}", vehicleState);
     managerService.updateDigitalTwin(vehicleState);
   }
-
 }

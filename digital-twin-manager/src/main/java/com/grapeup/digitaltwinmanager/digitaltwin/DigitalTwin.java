@@ -1,19 +1,20 @@
 package com.grapeup.digitaltwinmanager.digitaltwin;
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
+@Data
 @Document
 public class DigitalTwin {
 
   @Id
   private String id = "main";
 
-  private DigitalTwinProperty<Long> mileageInMeters = new DigitalTwinProperty<>();
+  private long mileageInMeters;
 
-  private DigitalTwinProperty<Long> rangeInMeters = new DigitalTwinProperty<>();
+  private long rangeInMeters;
 
   private DigitalTwinProperty<String> gpsRoute = new DigitalTwinProperty<>();
 
