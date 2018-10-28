@@ -11,14 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ManagerService {
 
-/*
-  private final DigitalTwinRepository digitalTwinRepository;
   private final GPS gps;
   private final UpdatesHandler updatesHandler;
 
   @Autowired
-  public ManagerService(DigitalTwinRepository digitalTwinRepository, GPS gps, UpdatesHandler updatesHandler) {
-    this.digitalTwinRepository = digitalTwinRepository;
+  public ManagerService(GPS gps, UpdatesHandler updatesHandler) {
     this.gps = gps;
     this.updatesHandler = updatesHandler;
   }
@@ -26,29 +23,13 @@ public class ManagerService {
   public void updateDigitalTwin(VehicleState vehicleState) {
     DigitalTwin digitalTwin = getDigitalTwin();
 
-    digitalTwin.getMileageInMeters().setActual(vehicleState.getMileageInMeters());
-    digitalTwin.getRangeInMeters().setActual(vehicleState.getRangeInMeters());
-    digitalTwin.getGpsRoute().setActual(vehicleState.getGpsRoute());
-
-    removeDesiredStateIfSet(digitalTwin);
-
-    digitalTwinRepository.save(digitalTwin);
   }
 
+  /*
   private void removeDesiredStateIfSet(DigitalTwin digitalTwin) {
-    if (digitalTwin.getMileageInMeters().getActual() != null
-        && digitalTwin.getMileageInMeters().getActual().equals(digitalTwin.getMileageInMeters().getDesired())) {
-      digitalTwin.getMileageInMeters().setDesired(null);
-    }
-
     if (digitalTwin.getGpsRoute().getActual() != null
         && digitalTwin.getGpsRoute().getActual().equals(digitalTwin.getGpsRoute().getDesired())) {
       digitalTwin.getGpsRoute().setDesired(null);
-    }
-
-    if (digitalTwin.getRangeInMeters().getActual() != null
-        && digitalTwin.getRangeInMeters().getActual().equals(digitalTwin.getRangeInMeters().getDesired())) {
-      digitalTwin.getRangeInMeters().setDesired(null);
     }
   }
 
@@ -60,7 +41,7 @@ public class ManagerService {
 
   public void updateGPS(Destination destination) {
     DigitalTwin digitalTwin = getDigitalTwin();
-    // String gpsRoute = gps.findRoute(destination, digitalTwin.getRangeInMeters().getActual() / 1000);
+    // find route
     // set desired state and save in database
     // updatesHandler.sendGPSRoute(gpsRoute);
   }
